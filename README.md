@@ -40,9 +40,7 @@ python3 convert_udf_to_docx.py /Users/cemalhekimoglu/Downloads/UYAP-TOOL --dry-r
 python3 convert_udf_to_docx.py /Users/cemalhekimoglu/Downloads/UYAP-TOOL -v
 ```
 
-Notlar
-- Bazı `.udf` dosyaları binary/proprietary formatta olabilir; LibreOffice o türleri açabiliyorsa işe yarayacaktır. Hiçbir yöntem çalışmazsa, dosya metin olarak okunabiliyorsa basit bir Word belgesi oluşturulur.
-- Eğer örnek bir `.udf` dosyası paylaşırsanız, dönüşüm kalitesini test edip gerekirse script'i uyarlayıp iyileştirebilirim.
+
 
 İhtiyacınız olursa script'i doğrudan sizin klasörde çalıştırıp sonuçları raporlayabilirim (izninizi ve bilgisayarınızda gerekli araçların yüklü olup olmadığını bildirin).
 
