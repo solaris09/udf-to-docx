@@ -1,56 +1,67 @@
-# UDF → DOCX Dönüştürücü 🔧
+# UDF → DOCX Dönüştürücü
 
-Bu küçük araç, belirttiğiniz kök klasör altında (alt klasörler dahil) bulunan tüm `.udf` dosyalarını `.docx` (Word) dosyalarına dönüştürür.
+Basit ve güvenilir bir araç: belirtilen kök klasörün altındaki tüm `.udf` dosyalarını `.docx` (Microsoft Word) formatına dönüştürür.
 
 Özellikler
-- Öncelikle `pandoc` ile dönüştürmeye çalışır (metin / markdown için en iyi sonuç).
-- Pandoc başarısız olursa `LibreOffice` headless modunda dönüştürmeyi dener.
-- Her iki yöntem de tutmazsa dosyayı metin olarak okuyup `python-docx` ile basit bir `.docx` oluşturmaya düşer.
-- Aynı isimle `.docx` olarak kaydeder (varsayılan davranış: özgün dosyanın yanına). İsterseniz `--out-dir` ile başka bir köke yazdırabilirsiniz.
+- Dönüşüm için şu sırayı dener: `pandoc` → `LibreOffice (headless)` → içerik çıkarma ve `python-docx` ile yazma (fallback).
+- Varsayılan olarak özgün dosyanın yanına aynı isimle `.docx` oluşturur. `--out-dir` ile çıktı kökünü değiştirebilirsiniz.
+- `--dry-run` ile hangi dosyaların dönüştürüleceğini görebilirsiniz; `-v` ayrıntılı çıktı sağlar.
 
 Kurulum (macOS)
 
-1) Homebrew varsa:
+Gerekli araçlar: `pandoc`, `LibreOffice` ve Python (`python3`). Homebrew kullanıyorsanız:
 
 ```bash
 brew install pandoc
 brew install --cask libreoffice
-pip3 install python-docx
+```
+
+Proje bağımlılıklarını yükleyin:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 Kullanım
 
 ```bash
-# Çalıştırılabilir yapmak (isteğe bağlı)
+# (isteğe bağlı) çalıştırılabilir yapma
 chmod +x convert_udf_to_docx.py
 
-# UYAP-TOOL içindeki .udf dosyalarını aynı yerlerine .docx olarak dönüştür
-python3 convert_udf_to_docx.py /Users/cemalhekimoglu/Downloads/UYAP-TOOL
+# Klasördeki .udf dosyalarını aynı dizinlere .docx olarak dönüştür
+python3 convert_udf_to_docx.py /path/to/UYAP-TOOL
 
-# Alternatif: çıktıları ayrı bir klasöre almak
-python3 convert_udf_to_docx.py /Users/cemalhekimoglu/Downloads/UYAP-TOOL --out-dir /Users/cemalhekimoglu/Downloads/UYAP-TOOL-docx
+# Çıktıları ayrı bir klasöre almak
+python3 convert_udf_to_docx.py /path/to/UYAP-TOOL --out-dir /path/to/output
 
-# Varolan .docx dosyalarını üzerine yazmak isterseniz
-python3 convert_udf_to_docx.py /Users/cemalhekimoglu/Downloads/UYAP-TOOL --overwrite
+# Varolan .docx dosyalarını üzerine yazmak
+python3 convert_udf_to_docx.py /path/to/UYAP-TOOL --overwrite
 
-# Neler yapılacağını görmek için dry-run
-python3 convert_udf_to_docx.py /Users/cemalhekimoglu/Downloads/UYAP-TOOL --dry-run
+# Dry-run (değişiklik yapmaz)
+python3 convert_udf_to_docx.py /path/to/UYAP-TOOL --dry-run -v
 
-# Daha ayrıntılı çıktı isterseniz
-python3 convert_udf_to_docx.py /Users/cemalhekimoglu/Downloads/UYAP-TOOL -v
+# Daha ayrıntılı çıktı için
+python3 convert_udf_to_docx.py /path/to/UYAP-TOOL -v
 ```
 
+Notlar
+- Araç, farklı `.udf` varyantları için birkaç dönüşüm stratejisi uygular; çoğu durumda başarılı sonuç alınır.
 
+Yazar
+- cemal hekimoğlu
 
-İhtiyacınız olursa script'i doğrudan sizin klasörde çalıştırıp sonuçları raporlayabilirim (izninizi ve bilgisayarınızda gerekli araçların yüklü olup olmadığını bildirin).
+Lisans
+- MIT — detaylar LICENSE dosyasında.
 
 ---
 
-## Kurulum (detaylı)
+## Detaylı Kurulum (opsiyonel)
 
-Aşağıda macOS için adım adım kurulum ve çalışma talimatı verilmiştir. Linux üzerinde çalıştıracaksanız paket yöneticinizin (apt/dnf/pacman vb.) eşdeğerlerini kullanın.
+Linux kullanıyorsanız paket yöneticinize göre `pandoc` ve `libreoffice` paketlerini yükleyin.
 
-1) Homebrew yoksa yükleyin (isteğe bağlı, ama önerilir):
+1) Homebrew yüklü değilse (macOS) isterseniz yükleyin:
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -63,40 +74,30 @@ brew install pandoc
 brew install --cask libreoffice
 ```
 
-3) Proje klasörüne geçin ve Python sanal ortamı oluşturup etkinleştirin:
+3) Sanal ortam oluşturup bağımlılıkları yükleyin:
 
 ```bash
 cd /path/to/udf-to-docx
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-4) Gereksinimleri yükleyin:
-
-```bash
 pip install -r requirements.txt
 ```
 
-5) (Opsiyonel) `gh` CLI ile GitHub üzerinde public repo oluşturmak isterseniz (önerilir):
+4) Repo oluşturma (opsiyonel, `gh` CLI ile):
 
 ```bash
 # gh CLI kurulu ve oturum açılmış olmalı
 gh repo create udf-to-docx --public --source=. --remote=origin --push --confirm
 ```
 
-6) Dry-run ile kontrol edin:
+5) Test için dry-run çalıştırın:
 
 ```bash
 python3 convert_udf_to_docx.py /path/to/UYAP-TOOL --dry-run -v
 ```
 
-7) Gerçek çalıştırma:
+6) Gerçek dönüşüm:
 
 ```bash
 python3 convert_udf_to_docx.py /path/to/UYAP-TOOL -v
 ```
-
-## Lisans ve Yazar
-
-- License: MIT
-- Author: **cemal hekimoğlu**
